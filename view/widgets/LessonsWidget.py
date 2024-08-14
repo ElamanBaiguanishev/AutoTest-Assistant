@@ -14,7 +14,7 @@ class LessonsWidget(QGroupBox):
 
         self.lesson_repository = LessonRepository()
         self.lessons = lessons
-        self.grid = grid  # Передаем основной GridLayout
+        self.grid = grid
 
         self.main_layout = QVBoxLayout()
         self.setLayout(self.main_layout)
@@ -27,21 +27,13 @@ class LessonsWidget(QGroupBox):
                 lesson: Lesson = self.lesson_repository.find_by_id(_id)
 
                 button_lesson = QPushButton(lesson.name)
-                button_lesson.clicked.connect(lambda _, l=lesson: self.show_tests(l))
+                button_lesson.clicked.connect(lambda _, _l=lesson: self.create_tests(_l))
 
                 self.main_layout.addWidget(button_lesson)
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             print(exc_type, exc_value, exc_traceback)
 
-    def show_tests(self, lesson):
-        print(f"Showing tests for lesson {lesson.name}")
-
-        # Удаляем старый виджет с тестами, если он существует
-        # if hasattr(self, 'test_widget'):
-        #     self.grid.removeWidget(self.test_widget)
-        #     self.test_widget.deleteLater()
-
-        # Создаем новый виджет с тестами и добавляем его на третью позицию в GridLayout
-        self.test_widget = TestWidget(lesson.name, lesson.tests)
-        self.grid.addWidget(self.test_widget, 0, 2)
+    def create_tests(self, lesson):
+        test_widget = TestWidget(lesson.name, lesson.tests)
+        self.grid.addWidget(test_widget, 0, 2)

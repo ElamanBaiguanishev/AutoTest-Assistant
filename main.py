@@ -3,7 +3,6 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from view.App import App
-from view.widgets.SemestrTabWidget import SemestrTabWidget
 
 if __name__ == '__main__':
     try:

@@ -13,39 +13,35 @@ class GroupsWidget(QWidget):
         self.groups = groups
         self.group_repository = GroupRepository()
 
-        self.tab_layout_groups = QGridLayout()  # Основной макет
+        self.semestr_content_layout = QGridLayout()  # Основной макет (в нем 3 groupbox)
+
         self.tab_group = QGroupBox(name)  # Основной виджет
 
-        self.content_widget = QStackedWidget()  # Этот виджет будет управлять отображением контента
-        self.grid = QGridLayout()
+        self.semestr_group_layout = QGridLayout()
 
-        self.grid.addWidget(self.tab_group, 0, 0)
-        self.tab_group.setLayout(self.tab_layout_groups)
-        self.setLayout(self.grid)
-        self.grid.addWidget(self.content_widget, 0, 1)
+        self.semestr_content_layout.addWidget(self.tab_group, 0, 0)
+
+        self.tab_group.setLayout(self.semestr_group_layout)
+
+        self.setLayout(self.semestr_content_layout)
 
         self.init_ui()
 
     def init_ui(self):
         try:
-            for index, _id in enumerate(self.groups):
+            for _id in self.groups:
                 group: Group = self.group_repository.find_by_id(_id)
-
-                # Создаем виджет с предметами для группы и передаем основной GridLayout
-                lessons_widget = LessonsWidget(f"Предметы - {group.name}", group.lessons, self.grid)
-                self.content_widget.addWidget(lessons_widget)
 
                 button_group = QPushButton(group.name)
 
                 # Используем замыкание, чтобы сохранить текущий индекс
-                button_group.clicked.connect(lambda _, idx=index: self.show_content(idx))
+                button_group.clicked.connect(lambda _, g=group: self.create_lessons(g))
 
-                self.tab_layout_groups.addWidget(button_group)
+                self.semestr_group_layout.addWidget(button_group)
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             print(exc_type, exc_value, exc_traceback)
 
-    def show_content(self, index):
-        print(f"Switching to index {index}")
-        self.content_widget.setCurrentIndex(index)
-
+    def create_lessons(self, group):
+        lessons_widget = LessonsWidget(f"Предметы - {group.name}", group.lessons, self.semestr_content_layout)
+        self.semestr_content_layout.addWidget(lessons_widget, 0, 1)

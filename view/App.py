@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QWidget, QGridLayout
 
-from mock import mock
+# from mock import mock
 from view.widgets.SemestrTabWidget import SemestrTabWidget
 
 

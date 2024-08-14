@@ -12,10 +12,7 @@ class TestWidget(QGroupBox):
         super().__init__(name)
         print(name)
         self.tests = tests
-
         self.test_repository = TestRepository()
-
-        self.content_widget = QStackedWidget()
 
         self.main_layout = QVBoxLayout()
 
